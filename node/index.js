@@ -10,12 +10,24 @@ const config = {
   database: 'nodedb',
 };
 
+const connection = mysql.createConnection(config);
+
 app.get('/', (req, res) => {
-  res.send('<h1>Full Cycle Rocks!</h1>');
   const sql = `INSERT INTO people(name) VALUES('Erik Urbanski')`;
-  const connection = mysql.createConnection(config);
   connection.query(sql);
+
+  const html = ``;
+  connection.query(`SELECT * FROM people`, (error, results) => {
+    if (error) {
+      return console.error(error.message);
+    }
+    results.forEach(element => {
+      html += `<br>${element.nome}`;
+    });
+  });
+
   connection.end();
+  res.send('<h1>Full Cycle Rocks!</h1><br>' + html);
 });
 
 app.listen(port, () => {
