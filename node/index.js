@@ -13,21 +13,23 @@ const config = {
 const connection = mysql.createConnection(config);
 
 app.get('/', (req, res) => {
+  // res.send('<h1>Full Cycle Rocks!</h1><br>');
+
   const sql = `INSERT INTO people(name) VALUES('Erik Urbanski')`;
   connection.query(sql);
 
-  const html = ``;
   connection.query(`SELECT * FROM people`, (error, results) => {
     if (error) {
       return console.error(error.message);
     }
-    results.forEach(element => {
-      html += `<br>${element.nome}`;
+    const data = JSON.parse(JSON.stringify(results));
+    let html = '';
+    data.forEach(function(value) {
+      html = html + value.name + '<br/>';
     });
-  });
 
-  connection.end();
-  res.send('<h1>Full Cycle Rocks!</h1><br>' + html);
+    res.send('<h1>Full Cycle Rocks!</h1><br />' + html);
+  });
 });
 
 app.listen(port, () => {
